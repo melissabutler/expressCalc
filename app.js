@@ -75,6 +75,27 @@ app.get('/mode', (req, res, next) => {
 
 })
 
+app.get('/all', (req, res, next) =>{
+    if (!req.query.nums){
+        throw new ExpressError('Please pass in a query key with a list of comma-seperated numbers', 400)
+    }
+    let numString = req.query.nums.split(',');
+
+    let nums = convert(numString);
+
+    if(nums instanceof Error){
+        throw new ExpressError(nums.message);
+    }
+
+    let result = {
+        operation: "all",
+        mean: operations.mean(nums),
+        median: operations.median(nums),
+        mode: operations.mode(nums),
+    }
+
+})
+
 // error handler
 app.use(function (req,res,next) {
     const err = new ExpressError("Not Found", 404)
